@@ -1,0 +1,100 @@
+#+TITLE: Vagrant Debian BaseBoxes
+#+DATE: <2025-06-28 Sat 20:18>
+#+AUTHOR: Mohsen BANAN
+
+Information needed for creation of base-boxes
+
+* Table of Contents     :TOC:
+-  [[#debian-baseboxes][Debian BaseBoxes.]]
+- [[#naming-conventions][Naming Conventions]]
+  - [[#mini][mini]]
+  - [[#bxppkgs][bxpPkgs]]
+  - [[#bxplatform][bxPlatform]]
+- [[#prior-art-and-similar-art][Prior Art and Similar Art]]
+  - [[#httpsgithubcomalvistackvagrant-debian-----not-all-that-useful][https://github.com/alvistack/vagrant-debian  -- Not all that useful]]
+  - [[#httpsgithubcomrgldebian-vagranttabreadme-ov-file][https://github.com/rgl/debian-vagrant?tab=readme-ov-file]]
+- [[#scope][Scope]]
+- [[#usage][Usage]]
+  - [[#qemu-kvm-usage][QEMU-KVM usage]]
+- [[#preseed][Preseed]]
+- [[#reference][Reference]]
+
+*  Debian BaseBoxes.
+
+ Each Release of Debian the following info is included.
+
+ - preseed
+ - hcr
+
+* Naming Conventions
+
+** mini
+
+** bxpPkgs
+
+** bxPlatform
+
+* Prior Art and Similar Art
+
+** https://github.com/alvistack/vagrant-debian  -- Not all that useful
+** https://github.com/rgl/debian-vagrant?tab=readme-ov-file  
+
+* Scope 
+
+This builds an up-to-date Vagrant Debian Base Box.
+
+Currently this targets [[https://www.debian.org/releases/trixie][Debian 13 (Trixie)]].
+Currently this targets [[https://www.debian.org/releases/bookworm/][Debian 12 (Bookworm)]].
+
+
+* Usage
+
+Install Packer 1.9+ and Vagrant 2.3+.
+
+
+** QEMU-KVM usage
+
+Install qemu-kvm:
+
+#+BEGIN_SRC bash
+apt-get install -y qemu-kvm
+apt-get install -y sysfsutils
+systool -m kvm_intel -v
+#+END_SRC
+
+Type `make build-libvirt` and follow the instructions.
+
+Try the example guest:
+
+#+BEGIN_SRC bash
+cd example
+apt-get install -y virt-manager libvirt-dev
+vagrant plugin install vagrant-libvirt # see https://github.com/vagrant-libvirt/vagrant-libvirt
+vagrant up --provider=libvirt --no-destroy-on-error
+vagrant ssh
+exit
+vagrant destroy -f
+#+END_SRC
+
+
+* Preseed
+
+The debian installation iso uses the [[https://wiki.debian.org/DebianInstaller][debian installer]] (aka d-i) to install debian. During the installation it will ask you some questions and it will also store your answers in the debconf database. After the installation is complete, you can see its contents with the following commands:
+
+#+BEGIN_SRC bash
+sudo su -l
+apt-get install debconf-utils
+debconf-get-selections --installer
+less /var/log/installer/syslog
+ls -la /var/log/installer/cdebconf
+#+END_SRC
+
+In reality, before d-i asks a question, it will first look for the answer in its database, if its there, it will automatically continue the installation without asking the question at all.
+
+To automate the installation, the database is populated from a [[file:preseed.txt][preseed.txt]] text file. d-i will get its location from the kernel command line `url` argument. Which will be a http address served by packer during the machine provisioning.
+
+
+* Reference
+
+- Debian Bookworm [[https://www.debian.org/releases/bookworm/amd64/apb.en.html][Appendix B. Automating the installation using preseeding]]
+- Debian Bookworm [[https://www.debian.org/releases/bookworm/example-preseed.txt][example-preseed.txt]]

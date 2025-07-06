@@ -1,0 +1,1 @@
+../../../../../../poly/debian/12/netinst/preseed-deb12-pt.txt
