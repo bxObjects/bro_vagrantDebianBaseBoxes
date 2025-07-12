@@ -2,55 +2,76 @@
 #+DATE: <2025-06-28 Sat 20:18>
 #+AUTHOR: Mohsen BANAN
 
-Information needed for creation of base-boxes
+This repo contains various vagrant base box specifications for creation of qemu based
+Debian Base Boxes.
+
+These specifications are structured in a common hierarchy designed to be processed by
+the /bisos.vagrantBaseBoxes/ python package.
+Before using these specifications, you should familiarize yourself with https://github.com/bisos-pip/vagrantBaseBoxes.
+
+/bisos.vagrantBaseBoxes/ is data driven. This repo is its data. You need to use
+/bisos.vagrantBaseBoxes/ to build the base boxes specified in this repo.
 
 * Table of Contents     :TOC:
--  [[#debian-baseboxes][Debian BaseBoxes.]]
-- [[#naming-conventions][Naming Conventions]]
-  - [[#mini][mini]]
-  - [[#bxppkgs][bxpPkgs]]
-  - [[#bxplatform][bxPlatform]]
-- [[#prior-art-and-similar-art][Prior Art and Similar Art]]
-  - [[#httpsgithubcomalvistackvagrant-debian-----not-all-that-useful][https://github.com/alvistack/vagrant-debian  -- Not all that useful]]
-  - [[#httpsgithubcomrgldebian-vagranttabreadme-ov-file][https://github.com/rgl/debian-vagrant?tab=readme-ov-file]]
-- [[#scope][Scope]]
-- [[#usage][Usage]]
+- [[#scope-of-this-repo][Scope of This Repo]]
+- [[#structure-of-this-repo][Structure of This Repo]]
+  - [[#poly----multi-env-configuration][poly -- multi-env configuration]]
+  - [[#qemu][qemu]]
+- [[#build-add-run-and-clean-process][Build, Add, Run and Clean Process]]
+- [[#bisos-platform-usage][BISOS Platform Usage]]
+- [[#standalone-preparations-and-usage][Standalone Preparations and Usage]]
+  - [[#install-packer-19-and-vagrant-23][Install Packer 1.9+ and Vagrant 2.3+.]]
   - [[#qemu-kvm-usage][QEMU-KVM usage]]
-- [[#preseed][Preseed]]
-- [[#reference][Reference]]
+- [[#debian-preseed][Debian Preseed]]
+- [[#related-resources][Related Resources]]
 
-*  Debian BaseBoxes.
+* Scope of This Repo
 
- Each Release of Debian the following info is included.
+This scope of this repo is qemu as provider and debian as distro.
+Currenty we target
 
- - preseed
- - hcr
+-  [[https://www.debian.org/releases/trixie][Debian 13 (Trixie)]]
+-  [[https://www.debian.org/releases/bookworm/][Debian 12 (Bookworm)]]
 
-* Naming Conventions
+* Structure of This Repo
 
-** mini
+For base box specifications, the structure of this repo is:\\
+<publisher>/<provider>/<distro>/<majorRelease>/<minorRelease>/<cpuArch>/<boxType>/<boxSelector>
 
-** bxpPkgs
+Here are some concrete mappings:
 
-** bxPlatform
+| <publisher>     | bro_vagrantDebianBaseBoxes | bx  | vagrantBaseBoxes is aware of abbrevs     |
+| <provider>      | qemu                       |     | perhaps virtualbox later                 |
+| <distro>        | debian                     | deb | perhaps ubuntu later                     |
+| <majorRelease>  | 13                         |     | 13 and 12 currently                      |
+| <minorRelease>  | trixie                     |     | Prior to release we go by name           |
+| <cpuArch>       | amd64                      |     | For now just amd64                       |
+| <boxCapability> | netinst                    |     | Refers to boxes content and capabilities |
+| <boxSelector>   | us                         |     | Variations on capability, eg US keyboard |
 
-* Prior Art and Similar Art
+The above describes the hierarchy of qemu in this repo which reflects the perspective of the user.
 
-** https://github.com/alvistack/vagrant-debian  -- Not all that useful
-** https://github.com/rgl/debian-vagrant?tab=readme-ov-file  
+The developer perspective is reflected in
 
-* Scope 
+** poly -- multi-env configuration
 
-This builds an up-to-date Vagrant Debian Base Box.
-
-Currently this targets [[https://www.debian.org/releases/trixie][Debian 13 (Trixie)]].
-Currently this targets [[https://www.debian.org/releases/bookworm/][Debian 12 (Bookworm)]].
+** qemu
 
 
-* Usage
+* Build, Add, Run and Clean Process
 
-Install Packer 1.9+ and Vagrant 2.3+.
+After having installed bisos.vagrantBaseBoxes python package
 
+* BISOS Platform Usage
+
+bro_vagrantDebianBaseBoxes are part of BISOS (ByStar Internet Services OS).
+A BISOS-Platform includes everything needed for processing the vagrant base box specifications.
+
+* Standalone Preparations and Usage
+
+
+
+** Install Packer 1.9+ and Vagrant 2.3+.
 
 ** QEMU-KVM usage
 
@@ -77,7 +98,7 @@ vagrant destroy -f
 #+END_SRC
 
 
-* Preseed
+* Debian Preseed
 
 The debian installation iso uses the [[https://wiki.debian.org/DebianInstaller][debian installer]] (aka d-i) to install debian. During the installation it will ask you some questions and it will also store your answers in the debconf database. After the installation is complete, you can see its contents with the following commands:
 
@@ -94,7 +115,7 @@ In reality, before d-i asks a question, it will first look for the answer in its
 To automate the installation, the database is populated from a [[file:preseed.txt][preseed.txt]] text file. d-i will get its location from the kernel command line `url` argument. Which will be a http address served by packer during the machine provisioning.
 
 
-* Reference
+* Related Resources
 
 - Debian Bookworm [[https://www.debian.org/releases/bookworm/amd64/apb.en.html][Appendix B. Automating the installation using preseeding]]
 - Debian Bookworm [[https://www.debian.org/releases/bookworm/example-preseed.txt][example-preseed.txt]]
