@@ -15,8 +15,6 @@ Before using these specifications, you should familiarize yourself with https://
 * Table of Contents     :TOC:
 - [[#scope-of-this-repo][Scope of This Repo]]
 - [[#structure-of-this-repo][Structure of This Repo]]
-  - [[#poly----multi-env-configuration][poly -- multi-env configuration]]
-  - [[#qemu][qemu]]
 - [[#build-add-run-and-clean-process][Build, Add, Run and Clean Process]]
 - [[#bisos-platform-usage][BISOS Platform Usage]]
 - [[#standalone-preparations-and-usage][Standalone Preparations and Usage]]
@@ -35,7 +33,7 @@ Currenty we target
 
 * Structure of This Repo
 
-For base box specifications, the structure of this repo is:\\
+For base box specifications, the structure of qemu in this repo is:\\
 <publisher>/<provider>/<distro>/<majorRelease>/<minorRelease>/<cpuArch>/<boxType>/<boxSelector>
 
 Here are some concrete mappings:
@@ -49,13 +47,11 @@ Here are some concrete mappings:
 | <boxCapability> | netinst                    |     | Refers to boxes content and capabilities |
 | <boxSelector>   | us                         |     | Variations on capability, eg US keyboard |
 
-The above describes the hierarchy of qemu in this repo which reflects the perspective of the user.
+The above, describes the hierarchy of qemu in this repo which reflects the perspective of the user.
 
-The developer perspective is reflected in
-
-** poly -- multi-env configuration
-
-** qemu
+The developer perspective is reflected in the poly hierarchy.
+The structure of poly in this repo is:\\
+<publisher>/poly/<distro>/<majorRelease>/<minorRelease>/<cpuArch>/<boxType>/<boxSelector>
 
 
 * Build, Add, Run and Clean Process
