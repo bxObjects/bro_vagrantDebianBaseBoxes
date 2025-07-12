@@ -56,13 +56,26 @@ The structure of poly in this repo is:\\
 Here are some concrete mappings:
 
 | <publisher>     | bro_vagrantDebianBaseBoxes | vagrantBaseBoxes is aware of abbrevs     |
-| poly            | poly                       | perhaps virtualbox later                 |
+| poly            | poly                       |                 |
 | <distro>        | debian                     | perhaps ubuntu later                     |
 | <majorRelease>  | 13                         | 13 and 12 currently                      |
 | <boxCapability> | netinst                    | Refers to boxes content and capabilities |
 
 The "<boxCapability>" (eg netinst) contains information for configuration of
 multiple environments.
+
+For the example of qemu+debian-13+netinst+us, consider the content of:\\
+https://github.com/bxObjects/bro_vagrantDebianBaseBoxes/tree/main/qemu/debian/13/trixie/amd64/netinst
+
+In that directory, the us.pkr.hcl file is a symlink to:\\
+../../../../../../poly/debian/13/netinst/13.trixie-netinst_us.pkr.hcl
+which points to the base for multi-configuration of this specific base box specification.
+
+The management of the relative symlinks and execution of the build process is wrapped in:\\
+https://github.com/bxObjects/bro_vagrantDebianBaseBoxes/blob/main/qemu/debian/13/trixie/amd64/netinst/vagBox.cs
+
+vagBox.cs is a planted CS (Command Service) whose seed is bisos.vagrantBaseBoxes's vagrantBoxProc.cs.
+
 
 * Build, Add, Run and Clean Process
 
