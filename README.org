@@ -18,7 +18,7 @@ Before using these specifications, you should familiarize yourself with https://
 - [[#build-add-run-and-clean-process][Build, Add, Run and Clean Process]]
 - [[#bisos-platform-usage][BISOS Platform Usage]]
 - [[#standalone-preparations-and-usage][Standalone Preparations and Usage]]
-  - [[#install-packer-19-and-vagrant-23][Install Packer 1.9+ and Vagrant 2.3+.]]
+  - [[#install-packer-19-and-vagrant-23][Install Packer 1.9+ and Vagrant 2.3+]]
   - [[#qemu-kvm-usage][QEMU-KVM usage]]
 - [[#debian-preseed][Debian Preseed]]
 - [[#related-resources][Related Resources]]
@@ -34,7 +34,7 @@ Currenty we target
 * Structure of This Repo
 
 For base box specifications, the structure of qemu in this repo is:\\
-<publisher>/<provider>/<distro>/<majorRelease>/<minorRelease>/<cpuArch>/<boxType>/<boxSelector>
+<publisher>/<provider>/<distro>/<majorRelease>/<minorRelease>/<cpuArch>/<boxCapability>/<boxSelector>
 
 Here are some concrete mappings:
 
@@ -51,12 +51,23 @@ The above, describes the hierarchy of qemu in this repo which reflects the persp
 
 The developer perspective is reflected in the poly hierarchy.
 The structure of poly in this repo is:\\
-<publisher>/poly/<distro>/<majorRelease>/<minorRelease>/<cpuArch>/<boxType>/<boxSelector>
+<publisher>/poly/<distro>/<majorRelease>/<boxCapability>
 
+Here are some concrete mappings:
+
+| <publisher>     | bro_vagrantDebianBaseBoxes | vagrantBaseBoxes is aware of abbrevs     |
+| poly            | poly                       | perhaps virtualbox later                 |
+| <distro>        | debian                     | perhaps ubuntu later                     |
+| <majorRelease>  | 13                         | 13 and 12 currently                      |
+| <boxCapability> | netinst                    | Refers to boxes content and capabilities |
+
+The "<boxCapability>" (eg netinst) contains information for configuration of
+multiple environments.
 
 * Build, Add, Run and Clean Process
 
-After having installed bisos.vagrantBaseBoxes python package
+After having installed bisos.vagrantBaseBoxes python package, you can build, add, run and clean
+each of the boxes.
 
 * BISOS Platform Usage
 
@@ -65,9 +76,10 @@ A BISOS-Platform includes everything needed for processing the vagrant base box 
 
 * Standalone Preparations and Usage
 
+When using /bisos.vagrantBaseBoxes/ and bro_vagrantDebianBaseBoxes outside of BISOS,
+you need to also install the following packages.
 
-
-** Install Packer 1.9+ and Vagrant 2.3+.
+** Install Packer 1.9+ and Vagrant 2.3+
 
 ** QEMU-KVM usage
 
@@ -96,7 +108,10 @@ vagrant destroy -f
 
 * Debian Preseed
 
-The debian installation iso uses the [[https://wiki.debian.org/DebianInstaller][debian installer]] (aka d-i) to install debian. During the installation it will ask you some questions and it will also store your answers in the debconf database. After the installation is complete, you can see its contents with the following commands:
+The debian installation iso uses the [[https://wiki.debian.org/DebianInstaller][debian installer]] (aka d-i) to install
+debian. During the installation it will ask you some questions and it will also
+store your answers in the debconf database. After the installation is complete,
+you can see its contents with the following commands:
 
 #+BEGIN_SRC bash
 sudo su -l
@@ -106,9 +121,13 @@ less /var/log/installer/syslog
 ls -la /var/log/installer/cdebconf
 #+END_SRC
 
-In reality, before d-i asks a question, it will first look for the answer in its database, if its there, it will automatically continue the installation without asking the question at all.
+In reality, before d-i asks a question, it will first look for the answer in its
+database, if its there, it will automatically continue the installation without
+asking the question at all.
 
-To automate the installation, the database is populated from a [[file:preseed.txt][preseed.txt]] text file. d-i will get its location from the kernel command line `url` argument. Which will be a http address served by packer during the machine provisioning.
+To automate the installation, the database is populated from a preseed.txt text
+file. d-i will get its location from the kernel command line `url` argument.
+Which will be a http address served by packer during the machine provisioning.
 
 
 * Related Resources
